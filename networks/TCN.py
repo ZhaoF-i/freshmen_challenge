@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torchaudio
 import torch.autograd.variable
 import numpy as np
 from torch.autograd.variable import *
@@ -33,16 +34,13 @@ class NET_Wrapper(nn.Module):
         self.sigmoid = nn.Sigmoid()
         self.relu = nn.ReLU()
 
+        self.Spec = torchaudio.transforms.Spectrogram(n_fft=self.win_len, power=None)
 
     def forward(self, input_data_c1):
-        # input_data_c1 = train_info_.mix_feat_b
-        STFT_C1, phase_C1 = self.STFT.transform(input_data_c1)
-        # STFT_C1 = STFT_C1.permute(0, 2, 1)
-        input_feature = STFT_C1
+        spec_feature = self.Spec(input_data_c1)
+        input_feature = torch.cat([spec_feature[:, :, :, 0], spec_feature[:, :, :, 0]], dim=-1)
+        input_feature = input_feature.permute(0,2,1)
 
-
-
-        # self.layer_list.append(self.relu(self.BN_dm(self.conv1_inp(input_feature))))
         conv = self.conv1_inp(input_feature)
         conv = self.BN_dm(conv)
         # conv = nn.LayerNorm(normalized_shape=conv.shape[-1], eps=1e-6)(conv)
