@@ -81,6 +81,7 @@ class NET_Wrapper(nn.Module):
             self.layer_list.append(residual + conv3)
 
         ResNep_outp = self.conv1_outp(self.layer_list[-1])
+        self.layer_list.clear()
         ResNep_outp = ResNep_outp.permute(0,2,1)
 
         lstm_out, _ = self.lstm(ResNep_outp)   # B:16 T  F`:128
@@ -91,6 +92,6 @@ class NET_Wrapper(nn.Module):
         outp = self.softmax(outp)
 
         return outp
-        # outp = self.sigmoid(outp)
+
 
 

@@ -5,7 +5,7 @@
       <paths name="ZhaoFei@183.175.12.36:22 password">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/ZhangXueLiang/ZhaoFei/PycharmProject/Freshmen_challenge_Classification_of_language" local="$PROJECT_DIR$" />
+            <mapping deploy="/PycharmProject/Freshmen_challenge_Classification_of_language" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>

@@ -27,7 +27,7 @@ def validate(network, eval_loader, weight, *criterion):
             outputs = network(features)
             loss = 0.
             for idx, cri in enumerate(criterion):
-                loss += cri(outputs, batch_eval) * weight[idx]
+                loss += cri(outputs, labels) * weight[idx]
             eval_loss = loss.data.item()
             accu_eval_loss += eval_loss
             cnt += 1.
