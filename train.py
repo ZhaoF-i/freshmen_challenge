@@ -165,9 +165,9 @@ if __name__ == '__main__':
                 model_name = _modeldir + '{}-{}-val.ckpt'.format(epoch + 1, i + 1)
                 best_model = _modeldir + 'best.ckpt'
                 if is_best:
-                    checkpoint.save(is_best, best_model, _logdir + 'train.log')
+                    checkpoint.save(is_best, best_model)
                 if not config['SAVE_BEST_ONLY']:
-                    checkpoint.save(False, model_name, _logdir + 'train.log')
+                    checkpoint.save(False, model_name)
 
                 accu_train_loss = 0.0
                 network.train()
