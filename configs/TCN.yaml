@@ -12,9 +12,9 @@ LOG_STEP: 500                                                                 # 
 
 
 # server setting
-CUDA_ID: '1'                                                                  # 指定GPU编号
-BATCH_SIZE: 16                                                               # 批处理数
-NUM_WORK: 8                                                                   # 线程数
+CUDA_ID: '0, 1'                                                                  # 指定GPU编号
+BATCH_SIZE: 1                                                               # 批处理数
+NUM_WORK: 0                                                                   # 线程数
 
 
 # environment parameter

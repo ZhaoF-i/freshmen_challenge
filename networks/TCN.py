@@ -18,12 +18,14 @@ class NET_Wrapper(nn.Module):
         self.d_f = 64
         self.k = 3
         self.max_d_rate = 16
+        self.lstm_input_size = 64
+        self.lstm_layers = 2
         self.layer_list = []
         self.dila_list = nn.ModuleList([])
         for i in range(5):
             self.dila_list.append(nn.Conv1d(in_channels=self.d_f, out_channels=self.d_f, kernel_size=self.k
                        , padding=int(2 ** i), dilation=int(2 ** i)))
-        self.conv1_outp = nn.Conv1d(in_channels=self.d_model, out_channels=161, kernel_size=1)
+        self.conv1_outp = nn.Conv1d(in_channels=self.d_model, out_channels=64, kernel_size=1)
         self.conv1_inp = nn.Conv1d(in_channels=161, out_channels=self.d_model, kernel_size=1)
         self.conv1_dm = nn.Conv1d(in_channels=self.d_model, out_channels=self.d_f, kernel_size=1)
         self.conv1_df = nn.Conv1d(in_channels=self.d_f, out_channels=self.d_model, kernel_size=1)
@@ -34,12 +36,23 @@ class NET_Wrapper(nn.Module):
         self.sigmoid = nn.Sigmoid()
         self.relu = nn.ReLU()
 
+        self.lstm = nn.LSTM(input_size=self.lstm_input_size,
+                            hidden_size=self.lstm_input_size,
+                            num_layers=self.lstm_layers,
+                            batch_first=True,
+                            bidirectional=True)
+
+        # self.Aver_pooling = nn.AvgPool2d((1, 128))
+        self.linear_layer = nn.Sequential(nn.Linear(128, 4),
+                                          nn.Dropout(0.5),
+                                          nn.LeakyReLU())
+        self.softmax = nn.Softmax(dim=1)
+
         self.Spec = torchaudio.transforms.Spectrogram(n_fft=self.win_len, power=None)
 
     def forward(self, input_data_c1):
         spec_feature = self.Spec(input_data_c1)
         input_feature = torch.cat([spec_feature[:, :, :, 0], spec_feature[:, :, :, 0]], dim=-1)
-        input_feature = input_feature.permute(0,2,1)
 
         conv = self.conv1_inp(input_feature)
         conv = self.BN_dm(conv)
@@ -67,10 +80,17 @@ class NET_Wrapper(nn.Module):
 
             self.layer_list.append(residual + conv3)
 
-        outp = self.conv1_outp(self.layer_list[-1])
-        outp = outp.permute(0, 2, 1)
+        ResNep_outp = self.conv1_outp(self.layer_list[-1])
+        ResNep_outp = ResNep_outp.permute(0,2,1)
 
-        return [outp, STFT_C1, phase_C1]
+        lstm_out, _ = self.lstm(ResNep_outp)   # B:16 T  F`:128
+        outp = self.linear_layer(lstm_out)
+
+        outp = torch.mean(outp, dim=1)
+        outp = outp.squeeze()
+        outp = self.softmax(outp)
+
+        return outp
         # outp = self.sigmoid(outp)
 
 

@@ -92,7 +92,8 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(network.parameters(), lr=config['LR'], amsgrad=True)
     lr_list = [0.0002] * 3 + [0.0001] * 6 + [0.00005] * 3 + [0.00001] * 3
     #  criteria,weight for each criterion
-    criterion = mag_loss(config['WIN_LEN'], config['WIN_OFFSET'], loss_type='mse')
+    # criterion = mag_loss(config['WIN_LEN'], config['WIN_OFFSET'], loss_type='mse')
+    criterion = nn.CrossEntropyLoss()
     weight = [1.]
 
     if args.model_name == 'none':
@@ -130,7 +131,7 @@ if __name__ == '__main__':
             # forward + backward + optimize
             optimizer.zero_grad()
             outputs = network(features)
-            loss = criterion(outputs, batch_info)
+            loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
 

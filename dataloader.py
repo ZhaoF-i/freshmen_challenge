@@ -27,10 +27,10 @@ class SpeechMixDataset(Dataset):
     def __getitem__(self, idx):
         wav, _ = sf.read(self.lst_path + '/' + str(self.lst[idx]) + '.wav')
         label = self.label[idx]
-        label = [dirc_map(label)]
+        label = dirc_map(label)
 
         sample = (Variable(torch.FloatTensor(wav.astype('float32'))),
-                  Variable(torch.Tensor(label))
+                  label
                   # Variable(label)
                   )
 
@@ -50,6 +50,7 @@ class BatchDataLoader(object):
         batch.sort(key=lambda x: x[0].size()[0], reverse=True)
         wav, label = zip(*batch)
         wav = pad_sequence(wav, batch_first=True)
-        label = pad_sequence(label, batch_first=True)
+        # label = pad_sequence(label, batch_first=True)
+        label = torch.LongTensor(label)
 
         return [wav, label]
