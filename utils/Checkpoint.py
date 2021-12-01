@@ -12,7 +12,10 @@ class Checkpoint(object):
         self.state_dict = state_dict
         self.optimizer = optimizer
 
-    def save(self, is_best, filename):
+    def save(self, is_best, filename, log_filename):
+        log.basicConfig(filename=log_filename,
+                        format='%(asctime)s:  %(message)s'
+                        , level=log.DEBUG, filemode='a', datefmt='%Y-%m-%d  %I:%M:%S %p')
         if is_best:
             log.info('Saving the best model at "%s"' % filename)
         else:
