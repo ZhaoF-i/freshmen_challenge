@@ -33,4 +33,4 @@ OUTPUT_DIR: '/data01/zhaofei/result/'                                          #
 BEST_MODEL: 'best.ckpt'                                                       # 默认最好模型名称
 MID_MODEL: 'val.ckpt'                                                         # 默认中间模型名称
 SAVE_BEST_ONLY: False                                                         # [True,False]:[仅保存最好的模型,保存中间模型]
-WORKSPACE: '/freshmen_challenge'                                                        # 子项目名称
+WORKSPACE: '/freshmen_challenge_maxpool'                                                        # 子项目名称
