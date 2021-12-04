@@ -3,16 +3,20 @@ import os
 import yaml
 import soundfile as sf
 import logging as log
-
+import numpy as np
 from pathlib import Path
 from torch import nn
 from metrics import Metrics
-from networks.CRN import NET_Wrapper
+from networks.TCN import NET_Wrapper
 from utils.Checkpoint import Checkpoint
 from utils.progressbar import progressbar as pb
 from utils.stft_istft import STFT
 from utils.util import makedirs, gen_list
+
+import torch
+from torch.nn.utils.rnn import *
 from torch.autograd.variable import *
+import requests
 
 
 class Test(object):
@@ -96,9 +100,33 @@ if __name__ == '__main__':
 
         # set type and suffix for local test dat
         inpath = config['TEST_PATH']
-        test = Test(inpath=inpath, outpath=outpath, type='online', suffix='mix.wav')
-        test.forward(network)
+        lst = [inpath+str(i)+'.wav' for i in range(len(os.listdir(inpath)))]
+        test_lst = []
+        # test_lst = np.array(test_lst)
+        max_len = 0
+        for i in lst:
+            wav, sr = sf.read(i)
+            if len(wav) > max_len:
+                max_len = len(wav)
+            test_lst.append(torch.FloatTensor(wav))
 
-    # cal metrics
-    metrics = Metrics(outpath)
-    metrics.forward()
+        dict = {0: 'C', 1: 'E', 2: 'M', 3: 'O'}
+        result = ''
+        index = 0
+        jump = True
+        network.eval()
+        while jump:
+            if index + 10 > len(lst):
+                inp = pad_sequence(test_lst[index: len(lst)], batch_first=True)
+                jump = False
+            inp = pad_sequence(test_lst[index: index+10], batch_first=True)
+            index += 10
+
+            # network.eval()
+            with torch.no_grad():
+                est = network(inp)
+
+            for i in range(est.shape[0]):
+                result += dict[est[i].cpu().numpy().argmax()]
+
+        requests.post('http://183.175.12.27:9000/push_final/', {'result': result, 'nick': 'ailive', 'sign': 'zhaofei'}).text

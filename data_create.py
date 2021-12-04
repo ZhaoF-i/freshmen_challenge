@@ -14,7 +14,23 @@ MN_PATH = ['/data02/corpus/speech_corpus/mongolian_wav/*.wav',
 EN_PATH = ['/data02/corpus/speech_corpus/TIMIT/TIMIT-wav/*/*/*/*.WAV',
            '/data01/zhaofei/data/enhancement_data_wsj0si84/enhancement_data/clean_si84_train/*.wav']
 CN_PATH = ['/data02/corpus/speech_corpus/863/*/*/*/*.WAV']
-NN_PATH = ['/data01/zhaofei/data/deep_xi_dataset/train_noise/*.wav']
+NN_PATH = ['/data01/zhaofei/data/freshmen_challenge/AR/*.wav',
+            '/data01/zhaofei/data/freshmen_challenge/ER/*.flac',
+            '/data01/zhaofei/data/freshmen_challenge/FR/*.flac',
+            '/data01/zhaofei/data/freshmen_challenge/TR/*.flac',
+           '/data01/zhaofei/data/freshmen_challenge/Tunisian_MSA/data/speech/train/*/*/*.wav',
+           '/data02/corpus/speech_corpus/language/NIST/Arabic/*.wav',
+           '/data02/corpus/speech_corpus/language/NIST/French/*.wav',
+           '/data02/corpus/speech_corpus/language/NIST/Hindi/*.wav',
+           '/data02/corpus/speech_corpus/language/NIST/Japanese/*.wav',
+           '/data02/corpus/speech_corpus/language/NIST/Korean/*.wav',
+           '/data02/corpus/speech_corpus/language/NIST/Spanish/*.wav',
+           '/data02/corpus/speech_corpus/language/NIST/Tamil/*.wav',
+           '/data02/corpus/speech_corpus/language/NIST/Vietnames/*.wav',
+           '/data02/corpus/speech_corpus/Nonspeech/*.wav',
+           '/data01/zhaofei/data/deep_xi_dataset/val_noise/*.wav',
+           '/data01/zhaofei/data/silent/*.wav'
+           ]
 
 do_time_augment = TimeDomainSpecAugment(speeds=[80, 110, 120],
                                        perturb_prob=1.0,
@@ -22,6 +38,7 @@ do_time_augment = TimeDomainSpecAugment(speeds=[80, 110, 120],
                                        drop_chunk_prob=1.0,
                                        drop_chunk_length_low=1000,
                                        drop_chunk_length_high=3000)
+
 
 
 corrupter = EnvCorrupt(openrir_folder='/data01/fanhaipeng/NewStudent/course-v3/zh-nbs/data2/')
@@ -34,10 +51,10 @@ en_data = reduce(lambda x,y: x+y, [glob(x) for x in EN_PATH])
 cn_data = reduce(lambda x,y: x+y, [glob(x) for x in CN_PATH])
 nn_data = reduce(lambda x,y: x+y, [glob(x) for x in NN_PATH])
 
-# data = sample(mn_data, 10000) + sample(en_data, 10000) + sample(cn_data, 10000) + sample(nn_data, 10000)
-# label = 'M'*10000 + 'E'*10000 + 'C'*10000 + 'O'*10000
-data = sample(mn_data, 1000) + sample(en_data, 1000) + sample(cn_data, 1000)
-label = 'M'*1000 + 'E'*1000 + 'C'*1000
+data = sample(mn_data, 10000) + sample(en_data, 10000) + sample(cn_data, 10000) + sample(nn_data, 10000)
+label = 'M'*10000 + 'E'*10000 + 'C'*10000 + 'O'*10000
+# data = sample(mn_data, 1000) + sample(en_data, 1000) + sample(cn_data, 1000)
+# label = 'M'*1000 + 'E'*1000 + 'C'*1000
 
 pack = list(zip(data, label))
 shuffle(pack)
@@ -56,7 +73,7 @@ for i, p in tqdm(enumerate(pack)):
     clean = clean.squeeze()
     clean = clean[randint(0, 3000):]
     clean = clean[:randint(30000, 60000)]
-    write_audio('/data01/zhaofei/data/freshmen_practice_data/val/%d.wav'%i, clean.squeeze(), 16000)
+    write_audio('/data01/zhaofei/data/freshmen_practice_data/large_train_4class/%d.wav'%i, clean.squeeze(), 16000)
 
-with open('/data01/zhaofei/data/freshmen_practice_data/val.txt', 'w') as f:
+with open('/data01/zhaofei/data/freshmen_practice_data/large_train_4class_label.txt', 'w') as f:
     f.write(lab)

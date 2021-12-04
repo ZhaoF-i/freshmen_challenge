@@ -87,7 +87,7 @@ class NET_Wrapper(nn.Module):
         lstm_out, _ = self.lstm(ResNep_outp)   # B:16 T  F`:128
         outp = self.linear_layer(lstm_out)
 
-        outp = torch.mean(outp, dim=1)
+        outp = torch.max(outp, dim=1)
         outp = outp.squeeze()
         outp = self.softmax(outp)
 
