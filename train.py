@@ -68,11 +68,6 @@ if __name__ == '__main__':
     makedirs([_modeldir, _datadir, _logdir])
     saveYAML(config, _outpath + '/' + args.yaml_name)
 
-    # log set
-    log.basicConfig(filename=_logdir + 'train.log',
-                    format='%(asctime)s:  %(message)s'
-                    , level=log.DEBUG, filemode='a', datefmt='%Y-%m-%d  %I:%M:%S %p')
-
     """
     network part
     """

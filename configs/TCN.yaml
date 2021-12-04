@@ -12,7 +12,7 @@ LOG_STEP: 625                                                                 # 
 
 
 # server setting
-CUDA_ID: '0'                                                                  # 指定GPU编号
+CUDA_ID: '1'                                                                  # 指定GPU编号
 BATCH_SIZE: 64                                                               # 批处理数
 NUM_WORK: 0                                                                   # 线程数
 
