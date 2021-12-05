@@ -128,5 +128,9 @@ if __name__ == '__main__':
 
             for i in range(est.shape[0]):
                 result += dict[est[i].cpu().numpy().argmax()]
-
-        requests.post('http://183.175.12.27:9000/push_final/', {'result': result, 'nick': 'ailive', 'sign': 'zhaofei'}).text
+        C_n = 0
+        for i in range(len(result)):
+            if result[i] == 'O':
+                C_n += 1
+        # requests.post('http://183.175.12.27:9000/push_final/', {'result': result, 'nick': 'ailive', 'sign': 'zhaofei'}).text
+        requests.post('http://183.175.12.27:9000/push/', {'result': result, 'nick': 't_resnet_1', 'sign': 'zhaofei'}).text

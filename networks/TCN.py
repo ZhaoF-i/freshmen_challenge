@@ -26,7 +26,7 @@ class NET_Wrapper(nn.Module):
             self.dila_list.append(nn.Conv1d(in_channels=self.d_f, out_channels=self.d_f, kernel_size=self.k
                        , padding=int(2 ** i), dilation=int(2 ** i)))
         self.conv1_outp = nn.Conv1d(in_channels=self.d_model, out_channels=64, kernel_size=1)
-        self.conv1_inp = nn.Conv1d(in_channels=161, out_channels=self.d_model, kernel_size=1)
+        self.conv1_inp = nn.Conv1d(in_channels=128, out_channels=self.d_model, kernel_size=1)
         self.conv1_dm = nn.Conv1d(in_channels=self.d_model, out_channels=self.d_f, kernel_size=1)
         self.conv1_df = nn.Conv1d(in_channels=self.d_f, out_channels=self.d_model, kernel_size=1)
 
@@ -36,23 +36,26 @@ class NET_Wrapper(nn.Module):
         self.sigmoid = nn.Sigmoid()
         self.relu = nn.ReLU()
 
-        self.lstm = nn.LSTM(input_size=self.lstm_input_size,
-                            hidden_size=self.lstm_input_size,
-                            num_layers=self.lstm_layers,
-                            batch_first=True,
-                            bidirectional=True)
+        # self.lstm = nn.LSTM(input_size=self.lstm_input_size,
+        #                     hidden_size=self.lstm_input_size,
+        #                     num_layers=self.lstm_layers,
+        #                     batch_first=True,
+        #                     bidirectional=True)
 
-        # self.Aver_pooling = nn.AvgPool2d((1, 128))
-        self.linear_layer = nn.Sequential(nn.Linear(128, 4),
+        self.gl_max_pool = nn.AdaptiveMaxPool1d(1)
+        self.linear_layer = nn.Sequential(nn.Linear(64, 4),
                                           nn.Dropout(0.5),
-                                          nn.LeakyReLU())
-        self.softmax = nn.Softmax(dim=1)
+                                          nn.Softmax())
+        # self.softmax = nn.Softmax(dim=1)
 
         self.Spec = torchaudio.transforms.Spectrogram(n_fft=self.win_len, power=None)
+        self.mel = torchaudio.transforms.MelSpectrogram(n_mels=128)
 
     def forward(self, input_data_c1):
-        spec_feature = self.Spec(input_data_c1)
-        input_feature = torch.cat([spec_feature[:, :, :, 0], spec_feature[:, :, :, 0]], dim=-1)
+
+        input_feature = self.mel(input_data_c1)
+        # spec_feature = self.Spec(input_data_c1)
+        # input_feature = torch.cat([spec_feature[:, :, :, 0], spec_feature[:, :, :, 0]], dim=-1)
 
         conv = self.conv1_inp(input_feature)
         conv = self.BN_dm(conv)
@@ -82,14 +85,18 @@ class NET_Wrapper(nn.Module):
 
         ResNep_outp = self.conv1_outp(self.layer_list[-1])
         self.layer_list.clear()
-        ResNep_outp = ResNep_outp.permute(0,2,1)
+        # ResNep_outp = ResNep_outp.permute(0,2,1)
 
-        lstm_out, _ = self.lstm(ResNep_outp)   # B:16 T  F`:128
-        outp = self.linear_layer(lstm_out)
 
-        outp = torch.max(outp, dim=1)[0]
+        # lstm_out, _ = self.lstm(ResNep_outp)   # B:16 T  F`:128
+
+        # lstm_out = lstm_out.permute(0,2,1)
+        outp = self.gl_max_pool(ResNep_outp)
         outp = outp.squeeze()
-        outp = self.softmax(outp)
+        outp = self.linear_layer(outp)
+
+        # outp = outp.squeeze()
+        # outp = self.softmax(outp)
 
         return outp
 
