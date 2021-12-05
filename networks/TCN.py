@@ -44,7 +44,7 @@ class NET_Wrapper(nn.Module):
 
         self.gl_max_pool = nn.AdaptiveMaxPool1d(1)
         self.linear_layer = nn.Sequential(nn.Linear(64, 4),
-                                          # nn.Dropout(0.5),
+                                          nn.Dropout(0.5),
                                           nn.Softmax())
         # self.softmax = nn.Softmax(dim=1)
 
@@ -54,8 +54,6 @@ class NET_Wrapper(nn.Module):
     def forward(self, input_data_c1):
 
         input_feature = self.mel(input_data_c1)
-        # spec_feature = self.Spec(input_data_c1)
-        # input_feature = torch.cat([spec_feature[:, :, :, 0], spec_feature[:, :, :, 0]], dim=-1)
 
         conv = self.conv1_inp(input_feature)
         conv = self.BN_dm(conv)
@@ -86,7 +84,6 @@ class NET_Wrapper(nn.Module):
         ResNep_outp = self.conv1_outp(self.layer_list[-1])
         self.layer_list.clear()
         # ResNep_outp = ResNep_outp.permute(0,2,1)
-
 
         # lstm_out, _ = self.lstm(ResNep_outp)   # B:16 T  F`:128
 

@@ -110,7 +110,7 @@ if __name__ == '__main__':
                 max_len = len(wav)
             test_lst.append(torch.FloatTensor(wav))
 
-        dict = {0: 'C', 1: 'E', 2: 'M', 3: 'O'}
+        dict = {0: 'C', 1: 'E', 2: 'M', 3: '0'}
         result = ''
         index = 0
         jump = True
