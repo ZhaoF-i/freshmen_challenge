@@ -6,7 +6,7 @@ WIN_OFFSET: 160                                                               # 
 LR: 0.001                                                                     # 学习率
 MAX_EPOCH: 15                                                                 # 训练轮数
 EPSILON: 0.0000001                                                            #
-USE_CV: True                                                                  # [True,False]，是否使用验证集
+USE_CV: False                                                                  # [True,False]，是否使用验证集
 EVAL_STEP: 125                                                               # 多少个batch进行一次CV
 LOG_STEP: 625                                                                 # 多少个batch输出一次信息
 
