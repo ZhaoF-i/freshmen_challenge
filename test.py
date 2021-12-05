@@ -130,7 +130,7 @@ if __name__ == '__main__':
                 result += dict[est[i].cpu().numpy().argmax()]
         C_n = 0
         for i in range(len(result)):
-            if result[i] == 'O':
+            if result[i] == '0':
                 C_n += 1
         # requests.post('http://183.175.12.27:9000/push_final/', {'result': result, 'nick': 'ailive', 'sign': 'zhaofei'}).text
         requests.post('http://183.175.12.27:9000/push/', {'result': result, 'nick': 't_resnet_1', 'sign': 'zhaofei'}).text

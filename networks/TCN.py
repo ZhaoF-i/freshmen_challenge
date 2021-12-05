@@ -48,7 +48,7 @@ class NET_Wrapper(nn.Module):
                                           nn.Softmax())
         # self.softmax = nn.Softmax(dim=1)
 
-        self.Spec = torchaudio.transforms.Spectrogram(n_fft=self.win_len, power=None)
+        # self.Spec = torchaudio.transforms.Spectrogram(n_fft=self.win_len, power=None)
         self.mel = torchaudio.transforms.MelSpectrogram(n_mels=128)
 
     def forward(self, input_data_c1):
