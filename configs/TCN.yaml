@@ -6,13 +6,13 @@ WIN_OFFSET: 160                                                               # 
 LR: 0.001                                                                     # 学习率
 MAX_EPOCH: 15                                                                 # 训练轮数
 EPSILON: 0.0000001                                                            #
-USE_CV: False                                                                  # [True,False]，是否使用验证集
+USE_CV: True                                                                  # [True,False]，是否使用验证集
 EVAL_STEP: 125                                                               # 多少个batch进行一次CV
 LOG_STEP: 625                                                                 # 多少个batch输出一次信息
 
 
 # server setting
-CUDA_ID: '1'                                                                  # 指定GPU编号
+CUDA_ID: '0'                                                                  # 指定GPU编号
 BATCH_SIZE: 64                                                               # 批处理数
 NUM_WORK: 0                                                                   # 线程数
 
@@ -22,8 +22,8 @@ project_root_path: '/home/ZhangXueLiang/zhaofei/PycharmProject/Freshmen'        
 WAV_PATH: '/data01/zhaofei/data/freshmen_practice_data/train_large'           # 语音文件路径
 TEST_PATH: '/data01/fanhaipeng/NewStudent/course-v3/zh-nbs/test/'                    # 测试集路径
 #CONFIG_PATH: '/data01/zhaofei/config'                                # 配置文件路径
-TRAIN_LST: '/data01/zhaofei/data/freshmen_practice_data/train_large'
-TRAIN_LABEL_PATH: '/data01/zhaofei/data/freshmen_practice_data/train_large_lab.txt'       # 噪音文件路径
+TRAIN_LST: '/data01/zhaofei/data/freshmen_practice_data/large_train_4class'
+TRAIN_LABEL_PATH: '/data01/zhaofei/data/freshmen_practice_data/large_train_4class_label.txt'       # 噪音文件路径
 
 CV_LST: '/data01/zhaofei/data/freshmen_practice_data/val'
 CV_LABEL_PATH: '/data01/zhaofei/data/freshmen_practice_data/val.txt'
@@ -33,4 +33,4 @@ OUTPUT_DIR: '/data01/zhaofei/result/'                                          #
 BEST_MODEL: 'best.ckpt'                                                       # 默认最好模型名称
 MID_MODEL: 'val.ckpt'                                                         # 默认中间模型名称
 SAVE_BEST_ONLY: False                                                         # [True,False]:[仅保存最好的模型,保存中间模型]
-WORKSPACE: '/freshmen_challenge_maxpool'                                                        # 子项目名称
+WORKSPACE: '/freshmen_challenge_test'                                                        # 子项目名称

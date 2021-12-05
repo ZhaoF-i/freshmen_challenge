@@ -44,7 +44,7 @@ class NET_Wrapper(nn.Module):
 
         self.gl_max_pool = nn.AdaptiveMaxPool1d(1)
         self.linear_layer = nn.Sequential(nn.Linear(64, 4),
-                                          nn.Dropout(0.5),
+                                          # nn.Dropout(0.5),
                                           nn.Softmax())
         # self.softmax = nn.Softmax(dim=1)
 

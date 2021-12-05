@@ -68,6 +68,22 @@ if __name__ == '__main__':
     makedirs([_modeldir, _datadir, _logdir])
     saveYAML(config, _outpath + '/' + args.yaml_name)
 
+    # # log set
+    # logger = log.getLogger()
+    # logger.setLevel(log.INFO)  # Log等级总开关
+    # # 第二步，创建一个handler，用于写入日志文件
+    # rq = time.strftime('%Y%m%d%H%M', time.localtime(time.time()))
+    # log_name = _logdir + rq + '-train.log'
+    # logfile = log_name
+    # fh = log.FileHandler(logfile, mode='w')
+    # fh.setLevel(log.DEBUG)  # 输出到file的log等级的开关
+    # # 第三步，定义handler的输出格式
+    # formatter = log.Formatter("%(asctime)s :  %(message)s")
+    # fh.setFormatter(formatter)
+    # # 第四步，将logger添加到handler里面
+    # logger.addHandler(fh)
+    # logger.info('在这里?')
+
     """
     network part
     """
@@ -93,8 +109,8 @@ if __name__ == '__main__':
     lr_list = [0.0002] * 3 + [0.0001] * 6 + [0.00005] * 3 + [0.00001] * 3
     #  criteria,weight for each criterion
     # criterion = mag_loss(config['WIN_LEN'], config['WIN_OFFSET'], loss_type='mse')
-    loss_weight = torch.Tensor([1,1,1,2])
-    criterion = nn.CrossEntropyLoss(weight=loss_weight)
+    loss_weight = torch.Tensor([1,1,1,2]).cuda()
+    criterion = nn.CrossEntropyLoss()
     weight = [1.]
 
     if args.model_name == 'none':
@@ -169,8 +185,8 @@ if __name__ == '__main__':
                 network.train()
                 cnt = 0.
 
-    # timeit = time.strftime('%Y-%m-%d-%H_', time.localtime(time.time()))
-    # log_path = str(_abspath) + '/train.log'
-    # if os.path.exists(log_path):
-    #     shutil.copy(log_path, _outpath + '/log/' + timeit + 'train.log')
-    #     file = open(log_path, 'w').close()
+    timeit = time.strftime('%Y-%m-%d-%H_', time.localtime(time.time()))
+    log_path = str(_abspath) + '/train.log'
+    if os.path.exists(log_path):
+        shutil.copy(log_path, _outpath + '/log/' + timeit + 'train.log')
+        file = open(log_path, 'w').close()
