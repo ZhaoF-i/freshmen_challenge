@@ -68,21 +68,11 @@ if __name__ == '__main__':
     makedirs([_modeldir, _datadir, _logdir])
     saveYAML(config, _outpath + '/' + args.yaml_name)
 
-    # # log set
-    # logger = log.getLogger()
-    # logger.setLevel(log.INFO)  # Log等级总开关
-    # # 第二步，创建一个handler，用于写入日志文件
-    # rq = time.strftime('%Y%m%d%H%M', time.localtime(time.time()))
-    # log_name = _logdir + rq + '-train.log'
-    # logfile = log_name
-    # fh = log.FileHandler(logfile, mode='w')
-    # fh.setLevel(log.DEBUG)  # 输出到file的log等级的开关
-    # # 第三步，定义handler的输出格式
-    # formatter = log.Formatter("%(asctime)s :  %(message)s")
-    # fh.setFormatter(formatter)
-    # # 第四步，将logger添加到handler里面
-    # logger.addHandler(fh)
-    # logger.info('在这里?')
+    # log set
+    log.basicConfig(filename=_logdir + 'train.log',
+                    format='%(asctime)s:  %(message)s'
+                    , level=log.DEBUG, filemode='a', datefmt='%Y-%m-%d  %I:%M:%S %p')
+
 
     """
     network part
