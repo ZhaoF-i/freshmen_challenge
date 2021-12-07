@@ -13,6 +13,7 @@ from utils.Checkpoint import Checkpoint
 from networks.TCN import NET_Wrapper
 from utils.progressbar import progressbar as pb
 from utils.util import makedirs, saveYAML
+import utils.log as logger
 
 
 def validate(network, eval_loader, weight, *criterion):
@@ -69,9 +70,7 @@ if __name__ == '__main__':
     saveYAML(config, _outpath + '/' + args.yaml_name)
 
     # log set
-    log.basicConfig(filename=_logdir + 'train.log',
-                    format='%(asctime)s:  %(message)s'
-                    , level=log.DEBUG, filemode='a', datefmt='%Y-%m-%d  %I:%M:%S %p')
+    logger.log(_logdir)
 
 
     """
